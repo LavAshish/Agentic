@@ -169,7 +169,7 @@ spec:
       name: Fetch Base
       action: fetch:plain
       input:
-        url: https://github.com/EliLillyCo/cortex-tool-template/tree/main
+        url: https://github.com/EliLillyCo/mcp-tool-server-template-py/tree/dev
     - action: lilly:catalog:write
       id: create-lilly-catalog-info
       name: Create catalog file
