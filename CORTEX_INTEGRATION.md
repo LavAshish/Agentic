@@ -45,6 +45,6 @@ Use the **`/describe`** endpoint to verify that your toolkit has been properly r
 - Check that the server connection is working
 
 ### 3.2 Execute Tools
-Use the **`/execute`** endpoint to test individual tools:
+Use the **`/execute`** endpoint to test an individual tool:
 - Validate that responses are returned correctly from your MCP server
 
