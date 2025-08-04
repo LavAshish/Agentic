@@ -193,19 +193,20 @@ spec:
               - cortex-agent
               - cortex-agent-tool
               - python
-              - grpc
+              - mcp
+              - mcp-tool-server
           spec:
-            type: grpc
+            type: mcp
             lifecycle: experimental
             owner: ${{ parameters.systemOwner }}
             definition:
-              $text: protos/tool.proto
+              $text: app/server.py
     - id: publish
       name: Publish on Github
       action: publish:github
       input:
         allowedHosts: ["github.com"]
-        description: This is the ${{ parameters.name }} Website built with React and NextJS with a
+        description: This is the ${{ parameters.name }} built using a
           template from Backstage.
         repoUrl: github.com?owner=EliLillyCo&repo=${{ parameters.repoName }}
         defaultBranch: ${{steps['lilly-config-read'].output.branch}}
@@ -217,7 +218,7 @@ spec:
       id: metrics-capture
       name: Metrics Capture
       input:
-        key: cortex-tool-template
+        key: mcp-tool-server-template
         subkey: repository::created::${{ parameters.businessArea }}
         datatype: Integer
         uom: repository
