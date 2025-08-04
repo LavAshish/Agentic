@@ -176,7 +176,7 @@ spec:
       input:
         entity:
           apiVersion: backstage.io/v1alpha1
-          kind: API
+          kind: Component
           metadata:
             name: ${{ parameters.repoName }}
             title: ${{ parameters.displayName }}
@@ -196,11 +196,11 @@ spec:
               - mcp
               - mcp-tool-server
           spec:
-            type: mcp
+            type: service
             lifecycle: experimental
             owner: ${{ parameters.systemOwner }}
-            definition:
-              $text: app/server.py
+            # definition:
+            #   $text: app/server.py
     - id: publish
       name: Publish on Github
       action: publish:github
