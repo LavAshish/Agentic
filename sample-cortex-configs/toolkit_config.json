@@ -1,0 +1,23 @@
+{
+  "allowed_model_configs": [
+    "your-model-config"
+  ],
+  "auth": {
+    "owners": [
+      "foo.boo@lilly.com"
+    ],
+    "allow_access_to_reports_of": [],
+    "owners_group": [],
+    "access_groups": [],
+    "access_aws_roles": [],
+    "owners_aws_roles": [],
+    "users": [],
+    "private": true
+  },
+  "description": "dc-ea-vc-mcp-server-toolkit",
+  "name": "dc-ea-vc-mcp-server-toolkit",
+  "displayName": null,
+  "server": "mcp://<service-name>.<namespace-name>.svc.cluster.local:5000",
+  "agent_tool_max_iterations": 7,
+  "access_token_scopes": []
+}
