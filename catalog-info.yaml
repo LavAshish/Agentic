@@ -3,18 +3,18 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: mcp-tool-server-template-py
-  title: |-
-    MCP Tool Server Accelerator: Local to Cortex (Py)
-  description: |-
-    TL;DR: Quickly develop an MCP tool server with built-in local testing support, CATS deployment workflows, and Cortex integration guidance.
-    
-    This accelerator scaffolds an MCP server for local development and testing — fully compatible with Windows environments. It includes robust documentation covering the full workflow: local setup, deployment to CATS using preconfigured GitHub Actions, and integration with Cortex. Sample model and tool configs are provided to support Cortex integration.
-    Once deployed to CATS, the server can also be integrated with any Agentic AI platform that supports MCP tool calling.
- 
-    Outputs: A ready-to-clone GitHub repo, pre-wired with workflows and configs, generated based on user input to the template.
+  title: "MCP Tool Server Accelerator: Local to Cortex (Py)"
+  description: >
+    tl;dr: quickly develop an mcp tool server with built-in local testing support, cats deployment workflows, and cortex integration guidance.
+
+    this accelerator scaffolds an mcp server for local development and testing - fully compatible with windows environments. it includes robust documentation covering the full workflow: local setup, deployment to cats using preconfigured github actions, and integration with cortex. sample model and tool configs are provided to support cortex integration.
+
+    once deployed to cats, the server can also be integrated with any agentic ai platform that supports mcp tool calling.
+
+    outputs: a ready-to-clone github repo, pre-wired with workflows and configs, generated based on user input to the template.
 
   dataClassification: green
-  businessArea: digital-core
+  businessArea: dc
   systemCustodian: user:akshat.jhalani@lilly.com
   primaryITContact: user:akshat.jhalani@lilly.com
   supportLevel: best-effort
