@@ -3,10 +3,18 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: mcp-tool-server-template-py
-  title: MCP Tool Server Template Cortex (Python)
-  description: This service is a template for a MCP toolkit server, written in python. This template is designed to be used with the Cortex Agent and is intended to be a starting point for creating new MCP tools. This template is also windows compatible.
+  title: "MCP Tool Server Accelerator: Local to Cortex (Py)"
+  description: >
+    tl;dr: quickly develop an mcp tool server with built-in local testing support, cats deployment workflows, and cortex integration guidance.
+
+    this accelerator scaffolds an mcp server for local development and testing - fully compatible with windows environments. it includes robust documentation covering the full workflow: local setup, deployment to cats using preconfigured github actions, and integration with cortex. sample model and tool configs are provided to support cortex integration.
+
+    once deployed to cats, the server can also be integrated with any agentic ai platform that supports mcp tool calling.
+
+    outputs: a ready-to-clone github repo, pre-wired with workflows and configs, generated based on user input to the template.
+
   dataClassification: green
-  businessArea: digital-core
+  businessArea: dc
   systemCustodian: user:akshat.jhalani@lilly.com
   primaryITContact: user:akshat.jhalani@lilly.com
   supportLevel: best-effort
