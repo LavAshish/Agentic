@@ -14,7 +14,7 @@ metadata:
     outputs: a ready-to-clone github repo, pre-wired with workflows and configs, generated based on user input to the template.
 
   dataClassification: green
-  businessArea: digital-core
+  businessArea: dc
   systemCustodian: user:akshat.jhalani@lilly.com
   primaryITContact: user:akshat.jhalani@lilly.com
   supportLevel: best-effort
