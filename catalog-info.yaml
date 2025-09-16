@@ -213,7 +213,6 @@ spec:
       name: Publish on Github
       action: publish:github
       input:
-        allowedHosts: ["github.com"]
         description: This is the ${{ parameters.name }} built using a
           template from Backstage.
         repoUrl: github.com?owner=EliLillyCo&repo=${{ parameters.repoName }}
