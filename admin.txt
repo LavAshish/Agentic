@@ -1,0 +1,3 @@
+Current version of dependencies fronting the uvlock and pyproject.toml files:
+
+> uv add "mcp[cli]==1.9.3" requests --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org
