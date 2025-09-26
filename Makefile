@@ -13,8 +13,8 @@ setup:
 	@echo "Activating virtual environment..."
 	# source .venv/bin/activate
 	@echo "Installing required packages..."
-	uv add "mcp[cli]==1.9.3" requests --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org
-	uv lock
+	# Prefer exact lock; if missing or mismatched, fall back and regenerate.
+	(uv sync --locked) || (echo "No/mismatched lock -> syncing & locking…" && uv sync && uv lock)
 	@echo "Setup complete. Dependencies successfully installed."
 
 server:
