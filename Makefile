@@ -1,5 +1,6 @@
 SHELL := /bin/bash
-
+# Hosts to allow when behind SSL-intercept (Zscaler).
+export UV_INSECURE_HOST := pypi.org,files.pythonhosted.org
 setup:
 	@echo "Installing uv python package manager..."
 	curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -12,7 +13,8 @@ setup:
 	@echo "Activating virtual environment..."
 	# source .venv/bin/activate
 	@echo "Installing required packages..."
-	uv add -r requirements.txt
+	uv add "mcp[cli]==1.9.3" requests --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org
+	uv lock
 	@echo "Setup complete. Dependencies successfully installed."
 
 server:
