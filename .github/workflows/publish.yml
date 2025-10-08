@@ -6,7 +6,7 @@ on:
       - main
       - dev
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   deploy_cats:
@@ -16,52 +16,88 @@ jobs:
       ENVIRONMENT: ""
       LOWERCASE_REPO: ""
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - name: Get name for ECR repo #(used in image name)
-      run: echo "LOWERCASE_REPO=$(echo ${{ github.event.repository.name }} | tr [A-Z] [a-z])" >> $GITHUB_ENV
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get name for ECR repo #(used in image name)
+        run: echo "LOWERCASE_REPO=$(echo ${{ github.event.repository.name }} | tr [A-Z] [a-z])" >> $GITHUB_ENV
 
-    - name: Set Branch Environment
-      if: github.ref_type != 'tag'
-      run: |
-        if [[ ${{ github.event.ref }} =~ ^refs/heads/dev$ ]]; then 
-          echo "ENVIRONMENT=dev" >> $GITHUB_ENV;
-        elif [[ ${{ github.event.ref }} =~ ^refs/heads/main$ ]]; then 
-          echo "ENVIRONMENT=main" >> $GITHUB_ENV; 
-        else
-          exit 1;
-        fi
+      - name: Get and set the branch name
+        id: branch_name
+        run: echo "BRANCH=$(echo $GITHUB_REF | cut -d'/' -f 3)" >> $GITHUB_ENV
 
-    - name: Generate Docker Metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      env:
-        DOCKER_METADATA_PR_HEAD_SHA: true
-      with:
-        # list of Docker images to use as base name for tags
-        images: |
-          ${{ secrets.LIGHT_DOCKER_REPOSITORY_URL }}/${{ env.LOWERCASE_REPO }}    
-        # generate Docker tags based on the following events/attributes
-        tags: |
-          type=sha,prefix=sha-
-          type=sha,prefix=sha-,format=short
-          type=sha,prefix=${{ env.ENVIRONMENT }}-sha-,format=short
-          type=ref,event=pr
-          type=ref,event=branch
-          type=ref,event=tag
-            
-    - name: Login to LIGHT AWS ECR
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.LIGHT_DOCKER_USER }}
-        password: ${{ secrets.LIGHT_DOCKER_TOKEN }}
-        registry: ${{ secrets.LIGHT_DOCKER_REPOSITORY_URL }}
-        ecr: false # TODO: fix as this is misleading, set to false to enable use of LIGHT_DOCKER_TOKEN to auth with registry
+      - name: Output the branch name
+        run: echo "The branch name is ${{ env.BRANCH }}"
 
-    - name: Build and Push Image
-      uses: docker/build-push-action@v6
-      with:
-        tags: ${{ steps.meta.outputs.tags }}
-        push: true
-        provenance: false
+      - name: Set environment variables
+        env:
+          DEV_LIGHT_DOCKER_REPOSITORY_URL: ${{ secrets.DEV_LIGHT_DOCKER_REPOSITORY_URL }}
+          QA_LIGHT_DOCKER_REPOSITORY_URL: ${{ secrets.QA_LIGHT_DOCKER_REPOSITORY_URL }}
+          LIGHT_DOCKER_REPOSITORY_URL: ${{ secrets.LIGHT_DOCKER_REPOSITORY_URL }}
+
+          DEV_LIGHT_DOCKER_USER: ${{ secrets.DEV_LIGHT_DOCKER_USER }}
+          QA_LIGHT_DOCKER_USER: ${{ secrets.QA_LIGHT_DOCKER_USER }}
+          LIGHT_DOCKER_USER: ${{ secrets.LIGHT_DOCKER_USER }}
+
+          DEV_LIGHT_DOCKER_TOKEN: ${{ secrets.DEV_LIGHT_DOCKER_TOKEN }}
+          QA_LIGHT_DOCKER_TOKEN: ${{ secrets.QA_LIGHT_DOCKER_TOKEN }}
+          LIGHT_DOCKER_TOKEN: ${{ secrets.LIGHT_DOCKER_TOKEN }}
+
+        run: |
+          if [[ $BRANCH == 'master' || $BRANCH == 'main' ]]; then
+            echo "LIGHT_DOCKER_REPOSITORY_URL=$LIGHT_DOCKER_REPOSITORY_URL" >> "$GITHUB_ENV"
+            echo "LIGHT_DOCKER_USER=$LIGHT_DOCKER_USER" >> "$GITHUB_ENV"
+            echo "LIGHT_DOCKER_TOKEN=$LIGHT_DOCKER_TOKEN" >> "$GITHUB_ENV"
+          elif [[ $BRANCH == 'staging' ]]; then
+            echo "LIGHT_DOCKER_REPOSITORY_URL=$QA_LIGHT_DOCKER_REPOSITORY_URL" >> "$GITHUB_ENV"
+            echo "LIGHT_DOCKER_USER=$QA_LIGHT_DOCKER_USER" >> "$GITHUB_ENV"
+            echo "LIGHT_DOCKER_TOKEN=$QA_LIGHT_DOCKER_TOKEN" >> "$GITHUB_ENV"
+          elif [[ $BRANCH == 'develop' || $BRANCH == 'dev' ]]; then
+            echo "LIGHT_DOCKER_REPOSITORY_URL=$DEV_LIGHT_DOCKER_REPOSITORY_URL" >> "$GITHUB_ENV"
+            echo "LIGHT_DOCKER_USER=$DEV_LIGHT_DOCKER_USER" >> "$GITHUB_ENV"
+            echo "LIGHT_DOCKER_TOKEN=$DEV_LIGHT_DOCKER_TOKEN" >> "$GITHUB_ENV"
+          fi
+
+      - name: Set Branch Environment
+        if: github.ref_type != 'tag'
+        run: |
+          if [[ ${{ github.event.ref }} =~ ^refs/heads/dev$ ]]; then 
+            echo "ENVIRONMENT=develop" >> $GITHUB_ENV;
+          elif [[ ${{ github.event.ref }} =~ ^refs/heads/main$ ]]; then 
+            echo "ENVIRONMENT=main" >> $GITHUB_ENV; 
+          else
+            exit 1;
+          fi
+
+      - name: Generate Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        env:
+          DOCKER_METADATA_PR_HEAD_SHA: true
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ${{ secrets.DEV_LIGHT_DOCKER_REPOSITORY_URL }}/${{ env.LOWERCASE_REPO }}
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=sha,prefix=sha-
+            type=sha,prefix=sha-,format=short
+            type=sha,prefix=${{ env.ENVIRONMENT }}-sha-,format=short
+            type=ref,event=pr
+            type=ref,event=branch
+            type=ref,event=tag
+
+      - name: Login to LIGHT AWS ECR
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DEV_LIGHT_DOCKER_USER }}
+          password: ${{ secrets.DEV_LIGHT_DOCKER_TOKEN }}
+          registry: ${{ secrets.DEV_LIGHT_DOCKER_REPOSITORY_URL }}
+          ecr: false # TODO: fix as this is misleading, set to false to enable use of LIGHT_DOCKER_TOKEN to auth with registry
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v6
+        with:
+          tags: ${{ steps.meta.outputs.tags }}
+          push: true
+          provenance: false
